@@ -12,10 +12,9 @@ def produzSolucao():
 	return S
 
 #TAMANHO DO TABULEIRO
-n = 2
+n = 3
 Sol = produzSolucao()
 MAXIMO = math.factorial(n*n)
-print(MAXIMO)
 
 
 class NodoArvore:
@@ -27,7 +26,7 @@ class NodoArvore:
 		self.altura = altura
 
 	def __repr__(self):
-		return '\n%s\n%s\n' % (self.chave[0],self.chave[1])
+		return '\n%s\n%s\n%s\n' % (self.chave[0],self.chave[1],self.chave[2])
 
 def buscaArv(no,movAnterior):
 	if no.altura < MAXIMO:
@@ -58,7 +57,7 @@ def buscaArv(no,movAnterior):
 					estados.append(filho)
 
 		no.filhos = estados
-		print(estados)
+		# print(estados)
 		for e in no.filhos:
 			buscaArv(e,e.origem)
 
