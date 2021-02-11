@@ -1,5 +1,7 @@
 import numpy as np
 import math
+import sys
+print(sys.getrecursionlimit())
 
 def produzSolucao():
 	S = np.zeros((n,n))
@@ -13,6 +15,8 @@ def produzSolucao():
 
 #TAMANHO DO TABULEIRO
 n = 3
+sys.setrecursionlimit(math.factorial(n*n))
+print(sys.getrecursionlimit())
 Sol = produzSolucao()
 # MAXIMO = math.factorial(n*n)
 MAXIMO = math.log(900,3)-1
@@ -30,7 +34,7 @@ class NodoArvore:
 		return '\n%s\n%s\n%s\n' % (self.chave[0],self.chave[1],self.chave[2])
 
 def buscaArv(no,movAnterior):
-	# print(no.altura)
+	print(no.altura)
 	if no.altura < MAXIMO:
 		estados = []
 		i,j,mov = verificaMovimentacao(no.chave)
@@ -57,7 +61,8 @@ def buscaArv(no,movAnterior):
 					S[i][j+1]=0
 					filho = NodoArvore(S,mov[k],no,no.altura+1)
 					estados.append(filho)
-
+			else:
+				break
 		no.filhos = estados
 		# print(estados)
 		for e in no.filhos:
@@ -129,11 +134,11 @@ P = produzPopulacao(10)
 #for i in range(len(P)):
 	#print(P[i])
 
-raiz = NodoArvore(Sa)
-print("PARA A ENTRADA:")
-print(raiz)
-buscaArv(raiz,"")
-solucao(raiz)
+# raiz = NodoArvore(Sa)
+# print("PARA A ENTRADA:")
+# print(raiz)
+# buscaArv(raiz,"")
+# solucao(raiz)
 
 Steste = np.array((1,2,3,5,7,6,4,8,0)).reshape((3,3))
 raiz = NodoArvore(Steste)
