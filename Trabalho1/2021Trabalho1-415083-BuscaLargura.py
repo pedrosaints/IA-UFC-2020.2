@@ -14,8 +14,9 @@ def produzSolucao():
 #TAMANHO DO TABULEIRO
 n = 3
 Sol = produzSolucao()
-MAXIMO = math.factorial(n*n)
-
+# MAXIMO = math.factorial(n*n)
+MAXIMO = math.log(900,3)-1
+print(MAXIMO)
 
 class NodoArvore:
 	def __init__(self, chave=None,origem="", pai=None, altura=0,filhos=None):
@@ -29,6 +30,7 @@ class NodoArvore:
 		return '\n%s\n%s\n%s\n' % (self.chave[0],self.chave[1],self.chave[2])
 
 def buscaArv(no,movAnterior):
+	# print(no.altura)
 	if no.altura < MAXIMO:
 		estados = []
 		i,j,mov = verificaMovimentacao(no.chave)
@@ -72,7 +74,7 @@ def solucao(no):
 		return
 	if not no.filhos:
 		#folha
-		print()
+		# print()
 		if verificaSolucao(Sol,no.chave):
 			print("SOLUCAO:")
 			caminho(no)
@@ -128,6 +130,13 @@ P = produzPopulacao(10)
 	#print(P[i])
 
 raiz = NodoArvore(Sa)
+print("PARA A ENTRADA:")
+print(raiz)
+buscaArv(raiz,"")
+solucao(raiz)
+
+Steste = np.array((1,2,3,5,7,6,4,8,0)).reshape((3,3))
+raiz = NodoArvore(Steste)
 print("PARA A ENTRADA:")
 print(raiz)
 buscaArv(raiz,"")
