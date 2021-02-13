@@ -53,12 +53,25 @@ def criaPopulacao(tamanho):
 		p.append(produzElemento())
 	return p
 
-pop = criaPopulacao(10)
+def calculaAptidao(P):
+	a = []
+	for elem in P:
+		print()
+		print("ENTRADA:")
+		print(elem)
+		print()
+		print("NUMERO DE COLISOES:")
+		a.append(verificaConflito(elem))
+	return a
 
-for elem in pop:
+pop = criaPopulacao(10)
+a = calculaAptidao(pop)
+for i in range(len(pop)):
 	print()
 	print("ENTRADA:")
-	print(elem)
+	print(pop[i])
 	print()
 	print("NUMERO DE COLISOES:")
-	print(verificaConflito(elem))
+	print(a[i])
+
+
