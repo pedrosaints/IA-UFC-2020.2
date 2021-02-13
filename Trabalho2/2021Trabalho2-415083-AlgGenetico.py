@@ -1,7 +1,7 @@
 import numpy as np
 
 n = 4
-
+Tam = 10
 
 
 def verificaConflito(A):
@@ -64,8 +64,34 @@ def calculaAptidao(P):
 		a.append(verificaConflito(elem))
 	return a
 
-pop = criaPopulacao(10)
+def escolhePai(A):
+	# print(A)
+	Roleta = np.copy(A)
+	s = np.cumsum(a)
+	# print("ROLETA prob normal")
+	# print(s)
+	total = s[Tam - 1]
+	# invertendo prob
+	for i in range(Tam):
+		Roleta[i] = total/A[i]
+	s = np.cumsum(Roleta)
+	# print("ROLETA c/ PROB INVERTIDA")
+	print("ROLETA")
+	print(s)
+	total = s[Tam - 1]
+	pai = np.random.randint(total)
+	print("NUMERO SORTEADO")
+	print(pai)
+	for i in range(Tam):
+		if pai < s[i]:
+			return i
+
+pop = criaPopulacao(Tam)
+# print("POPULACAO")
+# print(pop)
 a = calculaAptidao(pop)
+# print("APTIDAO")
+# print(a)
 for i in range(len(pop)):
 	print()
 	print("ENTRADA:")
@@ -73,5 +99,15 @@ for i in range(len(pop)):
 	print()
 	print("NUMERO DE COLISOES:")
 	print(a[i])
+
+print()
+print()
+pai1 = escolhePai(a)
+print("PAI 1")
+print(pop[pai1])
+
+pai2 = escolhePai(a)
+print("PAI 2")
+print(pop[pai2])
 
 
