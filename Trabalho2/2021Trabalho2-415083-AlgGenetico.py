@@ -1,50 +1,35 @@
 import numpy as np
 
+# TAMANHO TABULEIRO
 n = 4
+# TAMANHO POPULAÇÃO
 Tam = 10
+# TAXA MUTAÇÃO (10 = 10%)
+Tmut = 10
+# NUMERO MAX DE ITERACAO
+IT = 10
 
 
 def verificaConflito(A):
 	cont = 0
 	for i in range(n):
-		for j in range(n):
-			if A[i][j] == 1:
-				#verifica linha
-				for k in range(n):
-					if k != j:
-						if A[i][k] == 1:
-							cont+=1
-				#verifica coluna
-				for k in range(n):
-					if k != i:
-						if A[k][j] == 1:
-							cont+=1
-				#verifica diagonais
-				for k in range(1,n-i):
-					if j+k < n and i+k < n:
-						if A[i+k][j+k] == 1:
-							cont+=1				
-				for k in range(1,i+1):
-					if j-k > -1 and i-k > -1:
-						if A[i-k][j-k] == 1:
-							cont+=1	
-				for k in range(1,i+1):
-					if i-k > -1and j+k < n:
-						if A[i-k][j+k] == 1:
-							cont+=1
-				for k in range(1,n-i):
-					if j-k > -1and i+k < n:
-						if A[i+k][j-k] == 1:
-							cont+=1
+		#verifica linha nao precisa, entradas ja nao tem essas colisoes
+		#verifica coluna
+		for k in range(n):
+			if k != i:
+				if A[k] == A[i]:
+					cont+=1
+		#verifica diagonais
+		for k in range(n):
+			# print(k)
+			if k != i:
+				if abs(A[k] - A[i]) == abs(k-i):
+					cont+=1
 	return cont
 
 def produzElemento():
-	A = np.array((1, 1, 1, 1
-				  , 0, 0, 0, 0
-				  , 0, 0, 0, 0
-				  , 0, 0, 0, 0))
+	A = np.arange(n)
 	np.random.shuffle(A)
-	A = A.reshape((n, n))
 	return A
 
 def criaPopulacao(tamanho):
@@ -56,15 +41,17 @@ def criaPopulacao(tamanho):
 def calculaAptidao(P):
 	a = []
 	for elem in P:
-		print()
-		print("ENTRADA:")
-		print(elem)
-		print()
-		print("NUMERO DE COLISOES:")
-		a.append(verificaConflito(elem))
+		# print()
+		# print("ENTRADA:")
+		# print(elem)
+		# print()
+		# print("NUMERO DE COLISOES:")
+		apt = verificaConflito(elem)
+		# print(apt)
+		a.append(apt)
 	return a
 
-def escolhePai(A):
+def escolhePai(A,pai1 = -1):
 	# print(A)
 	Roleta = np.copy(A)
 	s = np.cumsum(a)
@@ -73,33 +60,24 @@ def escolhePai(A):
 	total = s[Tam - 1]
 	# invertendo prob
 	for i in range(Tam):
-		Roleta[i] = total/A[i]
+		# SE FOR SOLUCAO RETORNA SEMPRE ESSE ELEM
+		if A[i] == 0 and i != pai1:
+			return i
+		if A[i] == 0:
+			Roleta[i] = 0
+		else:
+			Roleta[i] = total/A[i]
 	s = np.cumsum(Roleta)
 	# print("ROLETA c/ PROB INVERTIDA")
-	print("ROLETA")
-	print(s)
+	# print("ROLETA")
+	# print(s)
 	total = s[Tam - 1]
 	pai = np.random.randint(total)
-	print("NUMERO SORTEADO")
-	print(pai)
+	# print("NUMERO SORTEADO")
+	# print(pai)
 	for i in range(Tam):
 		if pai < s[i]:
 			return i
-
-def localizaRainhas(T):
-	L = []
-	for i in range(n):
-		for j in range(n):
-			if T[i][j] == 1:
-				L.append((i,j))
-	return L
-
-def produzFilho(loc):
-	F = np.zeros((n,n))
-	for k in range(n):
-		i,j = loc[k]
-		F[i][j] = 1
-	return F
 
 def selecionaMelhores(a):
 	melhor1 = 0
@@ -118,57 +96,85 @@ def selecionaMelhores(a):
 
 def cruzamento(pop,a):
 	ipai1 = escolhePai(a)
-	ipai2 = escolhePai(a)
+	ipai2 = escolhePai(a,ipai1)
 	while ipai1 == ipai2:
 		pai2 = escolhePai(a)
 	pai1 = pop[ipai1]
 	pai2 = pop[ipai2]
-	loc1 = localizaRainhas(pai1)
-	loc2 = localizaRainhas(pai2)
-	print("PAI 1")
-	print(pai1)
-	print()
-	print("PAI 2")
-	print(pai2)
-	print()
+	filho1 = np.copy(pai1)
+	filho2 = np.copy(pai2)
+	# print("PAI 1")
+	# print(pai1)
+	# print()
+	# print("PAI 2")
+	# print(pai2)
+	# print()
 	corte = np.random.randint(n)
-	print(corte)
-	print()
-	# CORTE - ERRO - NEM SEMPRE FICA COM N RAINHAS
-	locaux = np.copy(loc1)
+	# print(corte)
+	# print()
+	# CORTE
 	for i in range(n):
 		if i < corte:
-			loc1[i] = loc2[i]
-			loc2[i] = locaux[i]
+			filho1[i] = pai2[i]
+			filho2[i] = pai1[i]
 
-	# MUTACAO AQUI
-	# TO DO
+	# MUTACAO
+	# P/ FILHO 1
+	mut = np.random.randint(100)
+	# print()
+	# print(mut)
+	# print()
+	if mut < Tmut:
+		iAleat = np.random.randint(n)
+		# print(iAleat)
+		numAleat = np.random.randint(n)
+		# print(numAleat)
+		filho1[iAleat] = numAleat
+		# print()
+	# P/ FILHO 2
+	mut = np.random.randint(100)
+	# print()
+	# print(mut)
+	# print()
+	if mut < Tmut:
+		iAleat = np.random.randint(n)
+		# print(iAleat)
+		numAleat = np.random.randint(n)
+		# print(numAleat)
+		filho2[iAleat] = numAleat
+		# print()
 
-	print("FILHO 1")
-	filho1 = produzFilho(loc1)
-	print(filho1)
-	print()
-	print("FILHO 2")
-	filho2 = produzFilho(loc2)
-	print(filho2)
+	# print("FILHO 1")
+	# print(filho1)
+	# print()
+	# print("FILHO 2")
+	# print(filho2)
 
 	# PELO ALGORITMO DA AULA RETIRO OS PAIS E COLOCO OS FILHOS
 	# MAS VOU ESCOLHER OS 2 MELHORES DOS 4 PARA UM ELITISMO BASICO
 	paiefilhos = [pai1,pai2,filho1,filho2]
 	apt = calculaAptidao(paiefilhos)
-	print()
-	print(apt)
-	print()
+	# print()
+	# print(apt)
+	# print()
 	melhor1, melhor2 = selecionaMelhores(apt)
-	print(melhor1)
-	print(melhor2)
+	# print(melhor1)
+	# print(melhor2)
 	pop[ipai1]=paiefilhos[melhor1]
 	a[ipai1]=apt[melhor1]
 	pop[ipai2] = paiefilhos[melhor2]
 	a[ipai2] = apt[melhor2]
 	return pop,a
 
+def aGMain(pop,a):
+	for i in range(IT):
+		print(i)
+		pop,a = cruzamento(pop,a)
 
+	print("POPULACAO")
+	print(pop)
+	print("APTIDAO")
+	print(a)
 
 pop = criaPopulacao(Tam)
 print("POPULACAO")
@@ -176,23 +182,14 @@ print(pop)
 a = calculaAptidao(pop)
 print("APTIDAO")
 print(a)
-for i in range(len(pop)):
-	print()
-	print("ENTRADA:")
-	print(pop[i])
-	print()
-	print("NUMERO DE COLISOES:")
-	print(a[i])
 
 print()
 print()
 
-pop,a = cruzamento(pop,a)
-# print()
-# for i in range(len(pop)):
-# 	print()
-# 	print("ENTRADA:")
-# 	print(pop[i])
-# 	print()
-# 	print("NUMERO DE COLISOES:")
-# 	print(a[i])
+
+aGMain(pop,a)
+print()
+
+
+# for k in range(1-1,1+2):
+# 	print(k)
