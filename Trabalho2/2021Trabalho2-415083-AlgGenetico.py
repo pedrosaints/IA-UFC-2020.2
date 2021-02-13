@@ -1,13 +1,13 @@
 import numpy as np
 
 # TAMANHO TABULEIRO
-n = 4
+n = 40
 # TAMANHO POPULAÇÃO
-Tam = 100
+Tam = 1000
 # TAXA MUTAÇÃO (10 = 10%)
 Tmut = 10
 # NUMERO MAX DE ITERACAO
-IT = 1000
+IT = 50000
 
 
 def verificaConflito(A):
@@ -168,13 +168,10 @@ def cruzamento(pop,a):
 
 def aGMain(pop,a):
 	for i in range(IT):
-		# print(i)
+		if i%1000 == 0:
+			print(i)
 		pop,a = cruzamento(pop,a)
-
-	print("POPULACAO")
-	print(pop)
-	print("APTIDAO")
-	print(a)
+	return pop,a
 
 def printTabuleiro(T):
 	tab11 = ""
@@ -196,26 +193,41 @@ def printTabuleiro(T):
 		print(tab1)
 
 pop = criaPopulacao(Tam)
-print("POPULACAO")
-print(pop)
+print("POPULACAO INCIAL")
+# print(pop)
 a = calculaAptidao(pop)
-print("APTIDAO")
+print("APTIDAO INICIAL")
 print(a)
+print("MEDIA")
+print(np.median(a))
 
 print()
 print()
 
-aGMain(pop,a)
+popf,af = aGMain(pop,a)
+print("POPULACAO FINAL")
+# print(popf)
+print("APTIDAO FINAL")
+print(af)
+print("MEDIA")
+print(np.median(a))
 print()
 imelhor1, imelhor2 = selecionaMelhores(a)
 print()
 melhor1 = pop[imelhor1]
 melhor2 = pop[imelhor2]
 print("MELHORES ELEMENTOS:")
+print()
+print("ELEMENTO:")
 print(melhor1)
+print("NUMERO DE COLISOES:")
+print(a[imelhor1])
 printTabuleiro(melhor1)
 print()
+print("ELEMENTO:")
 print(melhor2)
+print("NUMERO DE COLISOES:")
+print(a[imelhor2])
 printTabuleiro(melhor2)
 print()
 
