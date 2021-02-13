@@ -3,11 +3,11 @@ import numpy as np
 # TAMANHO TABULEIRO
 n = 4
 # TAMANHO POPULAÇÃO
-Tam = 10
+Tam = 100
 # TAXA MUTAÇÃO (10 = 10%)
 Tmut = 10
 # NUMERO MAX DE ITERACAO
-IT = 10
+IT = 1000
 
 
 def verificaConflito(A):
@@ -98,7 +98,7 @@ def cruzamento(pop,a):
 	ipai1 = escolhePai(a)
 	ipai2 = escolhePai(a,ipai1)
 	while ipai1 == ipai2:
-		pai2 = escolhePai(a)
+		ipai2 = escolhePai(a)
 	pai1 = pop[ipai1]
 	pai2 = pop[ipai2]
 	filho1 = np.copy(pai1)
@@ -168,13 +168,32 @@ def cruzamento(pop,a):
 
 def aGMain(pop,a):
 	for i in range(IT):
-		print(i)
+		# print(i)
 		pop,a = cruzamento(pop,a)
 
 	print("POPULACAO")
 	print(pop)
 	print("APTIDAO")
 	print(a)
+
+def printTabuleiro(T):
+	tab11 = ""
+	for i in range(n):
+		tab11 += " ---"
+	print(tab11)
+	for i in range(n):
+		tab1 = ""
+		tab2 = "|"
+		for j in range(n):
+			tab1 += " ---"
+			tab2 += " "
+			if j == T[i]:
+				tab2 += "R"
+			else:
+				tab2 += " "
+			tab2 += " |"
+		print(tab2)
+		print(tab1)
 
 pop = criaPopulacao(Tam)
 print("POPULACAO")
@@ -186,10 +205,17 @@ print(a)
 print()
 print()
 
-
 aGMain(pop,a)
 print()
+imelhor1, imelhor2 = selecionaMelhores(a)
+print()
+melhor1 = pop[imelhor1]
+melhor2 = pop[imelhor2]
+print("MELHORES ELEMENTOS:")
+print(melhor1)
+printTabuleiro(melhor1)
+print()
+print(melhor2)
+printTabuleiro(melhor2)
+print()
 
-
-# for k in range(1-1,1+2):
-# 	print(k)
