@@ -27,7 +27,7 @@ print(np.max(boston.data, axis=0))
 boston.data = (boston.data - boston.data.mean(axis=0)) / boston.data.std(axis=0)
 
 # Adicionando uma coluna de 1's ao X:
-boston.data = np.concatenate([np.ones(shape=[len(boston.data), 1]), boston.data], axis=1)
+
 
 print("Novas dimensoes do X:", boston.data.shape)
 
